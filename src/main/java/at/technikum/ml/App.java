@@ -16,9 +16,10 @@ public class App {
 
     public static void main(String[] args) {
         configureLogger();
+        List<Metrics> metrics;
         try {
             System.out.println(String.format(" ============================ Evaluation for IRIS Dataset ============================ "));
-            List<Metrics> metrics = EvaluationRunner.runAllEvaluation(SplitStrategy.FOLDS, new File(App.class.getResource("/iris.arff").getFile()));
+            metrics = EvaluationRunner.runAllEvaluation(SplitStrategy.FOLDS, new File(App.class.getResource("/iris.arff").getFile()));
             printTable("IRIS/5-folds", metrics);
 
             System.out.println(String.format(" ------------------------------------------------------------------------------------- "));
@@ -45,11 +46,11 @@ public class App {
         /* headline */
         System.out.println(String.format("%20s %10s %10s %10s %15s %15s", name, "Accuracy", "Precision", "Recall", "Training time", "Testing time"));
         /* data */
-        rows.forEach(m -> System.out.println(String.format("%20s %10s %10s %10s %10s sec %10s sec", m.algorithm, fToS(m.accuracy), fToS(m.precision), fToS(m.recall), fToS(m.trainingTime), fToS(m.testingTime))));
+        rows.forEach(m -> System.out.println(String.format("%20s %10s %10s %10s %10s ms %10s ms", m.algorithm, fToS(m.accuracy, 3), fToS(m.precision,3 ), fToS(m.recall,3), fToS(m.trainingTime,0), fToS(m.testingTime,0))));
     }
 
-    private static String fToS(double n){
-        return String.format("%.3f", n);
+    private static String fToS(double n, int decimal){
+        return String.format("%."+decimal+"f", n);
     }
 
     private static void configureLogger() {
