@@ -46,11 +46,11 @@ public class App {
         /* headline */
         System.out.println(String.format("%20s %10s %10s %10s %15s %15s", name, "Accuracy", "Precision", "Recall", "Training time", "Testing time"));
         /* data */
-        rows.forEach(m -> System.out.println(String.format("%20s %10s %10s %10s %10s ms %10s ms", m.algorithm, fToS(m.accuracy, 3), fToS(m.precision,3 ), fToS(m.recall,3), fToS(m.trainingTime,0), fToS(m.testingTime,0))));
+        rows.forEach(m -> System.out.println(String.format("%20s %10s %10s %10s %10s ms %10s ms", m.algorithm, fToS(m.accuracy, 3), fToS(m.precision, 3), fToS(m.recall, 3), fToS(m.trainingTime, 0), fToS(m.testingTime, 0))));
     }
 
-    private static String fToS(double n, int decimal){
-        return String.format("%."+decimal+"f", n);
+    private static String fToS(double n, int decimal) {
+        return String.format("%." + decimal + "f", n);
     }
 
     private static void configureLogger() {

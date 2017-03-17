@@ -6,7 +6,7 @@ public class PerceptronRunner extends MLAlgorithmRunner<PerceptronRunner, Double
 
     private PerceptronRunner() {
         this.classifier = new MultilayerPerceptron();
-        ((MultilayerPerceptron)this.classifier).setHiddenLayers("0");
+        ((MultilayerPerceptron) this.classifier).setHiddenLayers("0");
     }
 
     public static PerceptronRunner newPerceptronRunner() {

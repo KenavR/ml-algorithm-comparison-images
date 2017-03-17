@@ -6,15 +6,9 @@ import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
-import weka.experiment.CSVResultListener;
-import weka.experiment.ClassifierSplitEvaluator;
-import weka.experiment.RandomSplitResultProducer;
-import weka.experiment.SplitEvaluator;
-import weka.gui.experiment.Experimenter;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -26,17 +20,15 @@ import static at.technikum.ml.algorithms.PerceptronRunner.newPerceptronRunner;
 
 public class EvaluationRunner {
 
-    private static CSVResultListener resultListener = new CSVResultListener();
-
     public static Metrics runEvaluation(MLAlgorithmRunner runner, SplitStrategy strategy) throws Exception {
 
         Random rdm = new Random(Configuration.RANDOM_SEED);
         Instances rdmData = new Instances(runner.getData());
         rdmData.randomize(rdm);
 
-        if(strategy.equals(SplitStrategy.FOLDS)) {
+        if (strategy.equals(SplitStrategy.FOLDS)) {
             return evalFolds(rdmData, runner, Configuration.FOLDS);
-        } else if(strategy.equals(SplitStrategy.TWOtoONE)){
+        } else if (strategy.equals(SplitStrategy.TWOtoONE)) {
             return eval2to1(rdmData, runner);
         } else {
             throw new IllegalArgumentException(String.format("Provided SplitStrategy '%s' is not supported.", strategy));
@@ -64,7 +56,7 @@ public class EvaluationRunner {
         eval.crossValidateModel(runner.getClassifier(), data, folds, rdm);
         testTimeElapsed = System.currentTimeMillis() - testTimeStart;
 
-        return new Metrics(runner.getName(), 1-eval.errorRate(), eval.weightedPrecision(), eval.weightedRecall(), trainTimeElapsed, testTimeElapsed);
+        return new Metrics(runner.getName(), 1 - eval.errorRate(), eval.weightedPrecision(), eval.weightedRecall(), trainTimeElapsed, testTimeElapsed);
     }
 
     private static Metrics eval2to1(Instances rdmData, MLAlgorithmRunner runner) throws Exception {
@@ -77,7 +69,7 @@ public class EvaluationRunner {
 
         int trainIdx = Configuration.getLastIndexOfTrainSet(rdmData.size());
         Instances train = new Instances(rdmData, 0, trainIdx);
-        Instances test  = new Instances(rdmData, trainIdx+1, rdmData.size()-(trainIdx+1));
+        Instances test = new Instances(rdmData, trainIdx + 1, rdmData.size() - (trainIdx + 1));
 
         Classifier clsCopy = AbstractClassifier.makeCopy(runner.getClassifier());
 
@@ -91,7 +83,7 @@ public class EvaluationRunner {
         eval.evaluateModel(clsCopy, test);
         testTimeElapsed = System.currentTimeMillis() - testTimeStart;
 
-        return new Metrics(runner.getName(), 1-eval.errorRate(), eval.weightedPrecision(), eval.weightedRecall(),   trainTimeElapsed, testTimeElapsed);
+        return new Metrics(runner.getName(), 1 - eval.errorRate(), eval.weightedPrecision(), eval.weightedRecall(), trainTimeElapsed, testTimeElapsed);
     }
 
 
@@ -116,8 +108,8 @@ public class EvaluationRunner {
         try {
             runners = Arrays.asList(
                     newNearestNeighborRunner(3).buildClassifier(file),
-                    newNearestNeighborRunner(5).buildClassifier(file),
-                    newNearestNeighborRunner(7).buildClassifier(file),
+                    newNearestNeighborRunner(15).buildClassifier(file),
+                    newNearestNeighborRunner(30).buildClassifier(file),
                     newNaiveBayesRunner().buildClassifier(file),
                     newPerceptronRunner().buildClassifier(file),
                     newDecisionTreeRunner().buildClassifier(file)
